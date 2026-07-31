@@ -122,14 +122,3 @@ Calculate total build price.
 
 ---
 
-## 🧪 AngularJS Migration Note
-
-The component structure follows a modular, service-oriented pattern that maps cleanly to AngularJS:
-- `CarVisualizer` → Angular `CarVisualizerComponent`
-- `TelemetryTimeline` → Angular `TelemetryTimelineComponent`
-- API routes → Angular `HttpClient` services
-- Theme state → Angular `ThemeService` using `BehaviorSubject`
-
----
-
-*Submitted as Frontend Developer Assignment (4 Years Experience Level)*
