@@ -54,8 +54,24 @@ const fillPath  = `${curvePath} L ${svgW},${svgH} L 0,${svgH} Z`;
 
 export default function TelemetryTimeline() {
   const [activeLap, setActiveLap] = useState("03");
+  const [telemetryData, setTelemetryData] = useState<unknown>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmall, setIsSmall] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`/api/telemetry?lap=${activeLap}`)
+      .then((res) => res.json())
+      .then((resData) => {
+        if (isMounted && resData.success) {
+          setTelemetryData(resData.data);
+        }
+      })
+      .catch((err) => console.error("API /api/telemetry fetch error:", err));
+    return () => {
+      isMounted = false;
+    };
+  }, [activeLap]);
 
   useEffect(() => {
     const update = () => {
@@ -75,6 +91,7 @@ export default function TelemetryTimeline() {
   return (
     <div
       id="telemetry-timeline"
+      data-telemetry-loaded={Boolean(telemetryData)}
       className="absolute bottom-0 left-0 right-0 z-20 pointer-events-auto"
       style={{ height: `${TOTAL_H}px` }}
     >

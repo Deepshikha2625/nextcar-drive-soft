@@ -50,12 +50,11 @@ export default function CarVisualizer({
   isDark = true,
 }: CarVisualizerProps) {
   const [hovered, setHovered] = useState<HotspotKey>(null);
-  const [windowWidth, setWindowWidth] = useState(1366);
+  const [windowWidth, setWindowWidth] = useState(() => (typeof window !== "undefined" ? window.innerWidth : 1366));
 
   // Track window width for clamping tooltip
   useEffect(() => {
     if (typeof window === "undefined") return;
-    setWindowWidth(window.innerWidth);
     const handle = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handle);
     return () => window.removeEventListener("resize", handle);
@@ -75,17 +74,14 @@ export default function CarVisualizer({
   useEffect(() => {
     if (stageMode !== "trajectory") {
       if (timerRef.current) clearTimeout(timerRef.current);
-      setCurrentIdx(-1);
-      setVisitedIds(new Set());
-      setDotsVisible(true);
-      setDeliveryState("trajectory");
-      return;
+      const initTimer = setTimeout(() => {
+        setCurrentIdx(-1);
+        setVisitedIds(new Set());
+        setDotsVisible(true);
+        setDeliveryState("trajectory");
+      }, 0);
+      return () => clearTimeout(initTimer);
     }
-
-    setDeliveryState("trajectory");
-    setCurrentIdx(-1);
-    setVisitedIds(new Set());
-    setDotsVisible(true);
 
     let stepIdx = 0;
 
@@ -122,12 +118,18 @@ export default function CarVisualizer({
       }
     };
 
-    timerRef.current = setTimeout(advance, 400);
+    const startTimer = setTimeout(() => {
+      setDeliveryState("trajectory");
+      setCurrentIdx(-1);
+      setVisitedIds(new Set());
+      setDotsVisible(true);
+      advance();
+    }, 0);
 
     return () => {
+      clearTimeout(startTimer);
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stageMode]);
 
   const handleDotClick = (idx: number) => {
@@ -165,115 +167,39 @@ export default function CarVisualizer({
   // ─────────────────────────────────────────────────────────────────────────────
   return (
     <div className="relative flex items-center justify-center w-full h-full">
-      {/* Background centre spotlight beam */}
-      <div
-        className={`spotlight-beam-core absolute left-1/2 -translate-x-1/2 pointer-events-none z-0`}
-        style={{ opacity: stageMode === "spotlight" && showBeam ? 1 : 0 }}
-      />
-      <div
-        className={`spotlight-beam-glow absolute left-1/2 -translate-x-1/2 pointer-events-none z-0`}
-        style={{ opacity: stageMode === "spotlight" && showBeam ? 1 : 0 }}
-      />
 
       {/* ── MODE: Delivery Truck (Car + Truck, or Truck Only) ── */}
       {stageMode === "delivery" || deliveryState === "truck_with_car" || deliveryState === "truck_only" ? (
-        <div className="z-10 scale-in" style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "clamp(10px, 2.2vw, 32px)",
-          width: "100%",
-          maxWidth: 1000,
-          margin: "0 auto",
-          padding: "0 12px",
-          flexWrap: "wrap",
-        }}>
+        <div className="delivery-stage-box z-10 scale-in">
           {/* Car circle (Porsche) — present in truck_with_car, disappears in truck_only (Screenshot 3) */}
           {deliveryState !== "truck_only" && (
-            <div className="transition-all duration-700" style={{
-              width: "clamp(80px, 10vw, 145px)",
-              height: "clamp(80px, 10vw, 145px)",
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #E2E2E2 0%, #999999 50%, #111111 100%)",
-              padding: 3,
-              boxShadow: "0 10px 32px rgba(0,0,0,0.85)",
-              zIndex: 10,
-              flexShrink: 0,
-            }}>
-              <div style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                overflow: "hidden",
-                background: isDark ? "#0a0a0e" : "#e4e4ee",
-              }}>
+            <div className="delivery-car-base transition-all duration-700">
+              <div className="delivery-car-inner-box">
                 <img
                   src={carImage || "/red_car.jpg"}
                   alt="Red Sports Car"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
           )}
 
           {/* Truck + overlays */}
-          <div style={{
-            position: "relative",
-            display: "inline-block",
-            lineHeight: 0,
-            transform: "scaleX(-1)",
-            flexShrink: 0,
-            transition: "all 0.7s ease",
-          }}>
+          <div className="delivery-truck-box">
             <img
               src="/white_truck.png"
               alt="NEXTCAR Delivery Truck"
-              style={{
-                width: "min(580px, clamp(220px, 44vw, 580px))",
-                height: "auto",
-                display: "block",
-                userSelect: "none",
-              }}
+              className="delivery-truck-image"
             />
 
-            <div style={{
-              position: "absolute",
-              top:    "36.8%",
-              left:   "23%",
-              width:  "64%",
-              height: "23%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "6px",
-              pointerEvents: "none",
-              transform: "scaleX(-1)",
-            }}>
+            <div className="delivery-truck-overlay">
               <img
                 src="/logo.png"
                 alt="NEXTCAR"
-                style={{
-                  height: "clamp(28px, 3.8vw, 54px)",
-                  width: "auto",
-                  objectFit: "contain",
-                  display: "block",
-                  margin: "0 auto",
-                }}
+                className="delivery-logo"
               />
-              <div style={{
-                fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif",
-                fontWeight: 900,
-                fontStretch: "expanded",
-                fontSize: "clamp(16px, 2.6vw, 40px)",
-                lineHeight: "39px",
-                letterSpacing: "0.01em",
-                color: "rgba(0, 0, 0, 0.80)",
-                textTransform: "uppercase",
-                whiteSpace: "nowrap",
-                textAlign: "center",
-              }}>
-                VEICHLE DELIVERY
+              <div className="delivery-heading">
+                VEHICLE DELIVERY
               </div>
             </div>
           </div>
@@ -281,40 +207,15 @@ export default function CarVisualizer({
 
         /* ── Thank You View (Screenshot 4 & 5) ── */
       ) : deliveryState === "thank_you" ? (
-        <div className="z-20 flex flex-col items-center justify-center gap-6 scale-in" style={{ textAlign: "center" }}>
-          <h1 style={{
-            fontFamily: "'Shrikhand', 'Inter', serif",
-            fontWeight: 400,
-            fontStyle: "italic",
-            fontSize: "clamp(36px, 6vw, 60px)",
-            lineHeight: "39px",
-            letterSpacing: "0.01em",
-            textTransform: "uppercase",
-            color: isDark ? "#F4F4F4" : "#111118",
-            textAlign: "center",
-            margin: 0,
-            filter: isDark ? "drop-shadow(0 4px 16px rgba(0,0,0,0.8))" : "drop-shadow(0 4px 16px rgba(0,0,0,0.2))",
-          }}>
+        <div className="z-30 flex flex-col items-center justify-center gap-6 scale-in pointer-events-auto text-center">
+          <h1 className="thankyou-heading-text">
             THANK YOU
           </h1>
 
           <button
             id="thankyou-home-btn"
             onClick={handleResetToStart}
-            className="cursor-pointer transition-all duration-300 hover:scale-105"
-            style={{
-              padding: "10px 36px",
-              borderRadius: 9999,
-              background: isDark ? "rgba(80, 80, 80, 0.6)" : "rgba(220, 220, 228, 0.85)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              border: isDark ? "1px solid rgba(255, 255, 255, 0.2)" : "1px solid rgba(0, 0, 0, 0.14)",
-              color: isDark ? "#ffffff" : "#111118",
-              fontFamily: "'Inter', -apple-system, sans-serif",
-              fontSize: "0.95rem",
-              fontWeight: 500,
-              boxShadow: isDark ? "0 4px 20px rgba(0,0,0,0.5)" : "0 4px 20px rgba(0,0,0,0.1)",
-            }}
+            className="thankyou-home-btn hover:scale-105 pointer-events-auto relative z-30"
           >
             Home
           </button>

@@ -55,7 +55,7 @@ const plans = [
 
 export default function PricingPanel() {
   return (
-    <div className="pricing-grid w-full max-w-[1000px] px-4 flex items-start justify-center gap-5 z-20 fade-in-up pointer-events-auto">
+    <div className="pricing-grid w-full max-w-[1000px] px-4 flex items-start justify-center gap-5 z-20 fade-in-up pointer-events-auto mt-16 sm:mt-20">
       {plans.map((plan) => (
         <PricingCard key={plan.id} plan={plan} />
       ))}

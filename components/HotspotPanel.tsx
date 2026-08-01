@@ -1,7 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { HotspotKey } from "./CarVisualizer";
-import { X, Palette, Wrench, Package, Sliders } from "lucide-react";
+import { X, Palette, Wrench, Package, Sliders, Check } from "lucide-react";
 
 interface HotspotPanelProps {
   activeHotspot: HotspotKey;
@@ -62,6 +63,41 @@ const panelContent: Record<
 };
 
 export default function HotspotPanel({ activeHotspot, onClose, onAddToBuild }: HotspotPanelProps) {
+  const [selectedOpt, setSelectedOpt] = useState<string | null>(null);
+  const [configLoaded, setConfigLoaded] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch("/api/car-config")
+      .then((res) => res.json())
+      .then((data) => {
+        if (isMounted && data.success) {
+          setConfigLoaded(true);
+        }
+      })
+      .catch((err) => console.error("API /api/car-config error:", err));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleSelectOption = async (optionLabel: string) => {
+    setSelectedOpt(optionLabel);
+    if (!activeHotspot) return;
+
+    try {
+      await fetch("/api/car-config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          selections: [{ category: activeHotspot, option: optionLabel }],
+        }),
+      });
+    } catch (err) {
+      console.error("API POST /api/car-config error:", err);
+    }
+  };
+
   if (!activeHotspot) return null;
   const content = panelContent[activeHotspot];
   const IconComp = content.icon;
@@ -69,6 +105,7 @@ export default function HotspotPanel({ activeHotspot, onClose, onAddToBuild }: H
   return (
     <div
       id="hotspot-panel"
+      data-config-loaded={configLoaded}
       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 scale-in"
       style={{ width: "clamp(280px, 90vw, 340px)" }}
     >
@@ -126,48 +163,62 @@ export default function HotspotPanel({ activeHotspot, onClose, onAddToBuild }: H
 
         {/* Options list */}
         <div className="flex flex-col gap-2">
-          {content.options.map((opt, idx) => (
-            <button
-              key={idx}
-              id={`panel-option-${idx}`}
-              className="flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group hover:scale-[1.02]"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.07)",
-              }}
-            >
-              <div className="flex items-center gap-3">
-                {opt.color && (
-                  <span
-                    className="w-5 h-5 rounded-full"
-                    style={{
-                      background: opt.color,
-                      border: "1px solid rgba(255,255,255,0.2)",
-                    }}
-                  />
-                )}
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: "var(--text-secondary)", transition: "color 0.2s" }}
-                >
-                  {opt.label}
-                </span>
-              </div>
-              <span
-                className="text-xs font-semibold"
-                style={{ color: "var(--red-accent)", fontFamily: "'Rajdhani', sans-serif" }}
+          {content.options.map((opt, idx) => {
+            const isSelected = selectedOpt === opt.label;
+            return (
+              <button
+                key={idx}
+                id={`panel-option-${idx}`}
+                onClick={() => handleSelectOption(opt.label)}
+                className="flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group hover:scale-[1.02] cursor-pointer"
+                style={{
+                  background: isSelected
+                    ? "rgba(232,33,43,0.18)"
+                    : "rgba(255,255,255,0.04)",
+                  border: isSelected
+                    ? "1px solid rgba(232,33,43,0.6)"
+                    : "1px solid rgba(255,255,255,0.07)",
+                }}
               >
-                {opt.price}
-              </span>
-            </button>
-          ))}
+                <div className="flex items-center gap-3">
+                  {opt.color && (
+                    <span
+                      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                      style={{
+                        background: opt.color,
+                        border: "1px solid rgba(255,255,255,0.2)",
+                      }}
+                    />
+                  )}
+                  <span
+                    className="text-sm font-medium"
+                    style={{
+                      color: isSelected ? "#fff" : "var(--text-secondary)",
+                      transition: "color 0.2s",
+                    }}
+                  >
+                    {opt.label}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="text-xs font-semibold"
+                    style={{ color: "var(--red-accent)", fontFamily: "'Rajdhani', sans-serif" }}
+                  >
+                    {opt.price}
+                  </span>
+                  {isSelected && <Check size={14} className="text-red-400" />}
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         {/* Add to build button */}
         <button
           id="add-to-build-btn"
           onClick={onAddToBuild}
-          className="mt-4 w-full py-3 rounded-xl text-sm font-bold tracking-widest transition-all duration-300 hover:scale-[1.02] hover:shadow-lg red-glow-btn"
+          className="mt-4 w-full py-3 rounded-xl text-sm font-bold tracking-widest transition-all duration-300 hover:scale-[1.02] hover:shadow-lg red-glow-btn cursor-pointer"
           style={{
             background: "var(--red-accent)",
             color: "#fff",

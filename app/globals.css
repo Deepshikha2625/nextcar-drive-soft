@@ -430,22 +430,27 @@ nextjs-portal,
   overflow: hidden;
 }
 
-/* Dot matrix pattern overlay */
+/* Star pattern overlay */
 .bg-dot-matrix {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background-image: url('/star.png');
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .light .bg-dot-matrix {
-  background-image: radial-gradient(rgba(0, 0, 0, 0.18) 1px, transparent 1px);
+  background-image: url('/star.png');
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 /* Centre vertical light beam */
 .bg-light-beam {
-  width: 320px;
+  width: 480px;
   height: 100%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.04) 40%, transparent 80%);
-  filter: blur(18px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.10) 45%, rgba(255, 255, 255, 0.02) 80%, transparent 100%);
+  filter: blur(25px);
 }
 
 .light .bg-light-beam {
@@ -456,33 +461,29 @@ nextjs-portal,
 .ring-outer {
   width: 1280px;
   height: 1280px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: radial-gradient(circle, rgba(22, 22, 28, 0.2) 0%, rgba(4, 4, 6, 0.85) 100%);
-  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.025);
+  background: transparent;
 }
 
 .ring-mid-outer {
   width: 940px;
   height: 940px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  background: radial-gradient(circle, rgba(18, 18, 24, 0.3) 0%, rgba(6, 6, 8, 0.9) 100%);
-  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.025);
+  background: transparent;
 }
 
 .ring-mid-inner {
   width: 620px;
   height: 620px;
-  border: 1px solid rgba(255, 255, 255, 0.035);
-  background: radial-gradient(circle, rgba(14, 14, 18, 0.45) 0%, rgba(8, 8, 10, 0.95) 100%);
-  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.025);
+  background: transparent;
 }
 
 .ring-core {
   width: 320px;
   height: 320px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: radial-gradient(circle, #08080b 0%, #020203 100%);
-  box-shadow: 0 0 80px rgba(0, 0, 0, 0.95), inset 0 0 40px rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: transparent;
 }
 
 /* Light theme ring overrides */
@@ -529,6 +530,50 @@ nextjs-portal,
 
 .light .bg-bottom-red {
   background: linear-gradient(to top, rgba(196, 16, 32, 0.12) 0%, transparent 100%);
+}
+
+/* Thank You heading text */
+.thankyou-heading-text {
+  font-family: 'Shrikhand', 'Inter', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(36px, 6vw, 60px);
+  line-height: 39px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #F4F4F4;
+  text-align: center;
+  margin: 0;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.8));
+}
+
+.light .thankyou-heading-text {
+  color: #111118;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.2));
+}
+
+/* Thank You Home button */
+.thankyou-home-btn {
+  padding: 10px 36px;
+  border-radius: 9999px;
+  background: rgba(80, 80, 80, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.light .thankyou-home-btn {
+  background: rgba(220, 220, 228, 0.85);
+  border-color: rgba(0, 0, 0, 0.14);
+  color: #111118;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 /* Car stage padding */
@@ -585,83 +630,129 @@ nextjs-portal,
    CAR VISUALIZER
 ───────────────────────────────────────────────────────────────────────── */
 
-/* Spotlight beam layers */
+/* ── Spotlight Beam ── pure radial gradient, no clip-path, no hard edges */
 .spotlight-beam-core {
-  width: 800px;
-  height: 620px;
-  top: -80px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
-  clip-path: polygon(47% 0%, 53% 0%, 100% 100%, 0% 100%);
-  transition: opacity 0.6s ease;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 720px;
+  pointer-events: none;
+  background:
+    /* Tight bright inner beam: narrow ellipse emanating from top */
+    radial-gradient(
+      ellipse 80px 400px at 50% 0%,
+      rgba(199, 198, 198, 0.82) 0%,
+      rgba(199, 198, 198, 0.45) 35%,
+      rgba(199, 198, 198, 0.10) 70%,
+      transparent 100%
+    ),
+    /* Wide soft atmospheric shadow/blur halo */
+    radial-gradient(
+      ellipse 420px 620px at 50% 0%,
+      rgba(199, 198, 198, 0.28) 0%,
+      rgba(199, 198, 198, 0.10) 45%,
+      transparent 80%
+    );
+  filter: blur(18px);
 }
 
-.spotlight-beam-glow {
-  width: 900px;
-  height: 620px;
-  top: -80px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 50%, transparent 100%);
-  clip-path: polygon(44% 0%, 56% 0%, 100% 100%, 0% 100%);
-  filter: blur(40px);
-  transition: opacity 0.6s ease;
-}
+.spotlight-beam-core::before,
+.spotlight-beam-core::after { display: none; }
+.spotlight-beam-glow { display: none; }
+
 
 /* Delivery view wrapper */
-.delivery-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 1100px;
-  padding: 0 16px;
+.delivery-stage-box {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: -24px;
+  gap: clamp(10px, 2.2vw, 32px);
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 12px;
+  flex-wrap: wrap;
 }
 
-/* Truck image (2000x2000 canvas flipped scaleX(-1)) */
-.delivery-truck-img {
-  width: min(1000px, 30vw);
-  height: auto;
-  margin-top: -15.5%;
-  margin-bottom: -12.5%;
-  display: block;
-  object-fit: contain;
+/* Delivery car circle base */
+.delivery-car-base {
+  width: clamp(80px, 10vw, 145px);
+  height: clamp(80px, 10vw, 145px);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E2E2E2 0%, #999999 50%, #111111 100%);
+  padding: 3px;
+  box-shadow: 0 10px 32px rgba(0,0,0,0.85);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.delivery-car-inner-box {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #0a0a0e;
+}
+
+.light .delivery-car-inner-box {
+  background: #e4e4ee;
+}
+
+/* Delivery truck container box */
+.delivery-truck-box {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
   transform: scaleX(-1);
+  flex-shrink: 0;
+  transition: all 0.7s ease;
+}
+
+.delivery-truck-image {
+  width: min(580px, clamp(220px, 44vw, 580px));
+  height: auto;
+  display: block;
+  user-select: none;
 }
 
 /* Truck overlay (positioned inside white cargo box) */
 .delivery-truck-overlay {
   position: absolute;
-  top: 36.8%;
+  top: 20%;
   left: 23%;
-  width: 64%;
-  height: 23%;
+  width: 56%;
+  height: 54%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: clamp(2px, 0.4vw, 6px);
   pointer-events: none;
   box-sizing: border-box;
+  transform: scaleX(-1);
 }
 
 /* Delivery logo */
 .delivery-logo {
-  height: clamp(28px, 3.8vw, 54px);
+  height: clamp(26px, 4.5vw, 62px);
   width: auto;
+  max-width: 96%;
   object-fit: contain;
   display: block;
   margin: 0 auto;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.22));
 }
 
 /* Delivery heading text */
 .delivery-heading {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 900;
-  font-stretch: expanded;
-  font-size: clamp(16px, 2.6vw, 40px);
-  line-height: 39px;
-  letter-spacing: 0.01em;
-  color: rgba(0, 0, 0, 0.80);
+  font-size: clamp(9px, 1.4vw, 18px);
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  color: #0A0A0E;
   text-transform: uppercase;
   white-space: nowrap;
   text-align: center;
@@ -847,7 +938,11 @@ nextjs-portal,
   padding: 1.32px;
   background: conic-gradient(from 120deg, #888 0%, #D5D0D0 25%, #ffffff 40%, #D5D0D0 55%, #888 70%, #555 85%, #888 100%);
   border-radius: 50%;
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(255, 255, 255, 0.05);
+  /* Glow contained to circle — no large outward spread */
+  box-shadow:
+    0 0 18px rgba(255, 255, 255, 0.30),
+    0 0 36px rgba(255, 255, 255, 0.12),
+    0 15px 50px rgba(0, 0, 0, 0.9);
 }
 
 .car-circle-inner {
@@ -1092,11 +1187,18 @@ nextjs-portal,
     height: min(210px, 54vw);
   }
 
-  /* Hide hotspots on mobile — too cramped */
-  .hotspot-pos-customize,
-  .hotspot-pos-bodywork,
-  .hotspot-pos-paintjob,
-  .hotspot-pos-accessories { display: none !important; }
+  /* Mobile hotspots — reposition around the small car circle */
+  .hotspot-size {
+    width: 100px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+    font-size: 0.55rem !important;
+  }
+  .hotspot-pos-customize   { top: calc(50% - 130px); left: calc(50% - 210px); display: flex !important; }
+  .hotspot-pos-bodywork    { top: calc(50% - 130px); left: calc(50% + 110px); display: flex !important; }
+  .hotspot-pos-paintjob    { top: calc(50% + 95px);  left: calc(50% - 210px); display: flex !important; }
+  .hotspot-pos-accessories { top: calc(50% + 95px);  left: calc(50% + 110px); display: flex !important; }
+
 
   /* Hide side/right navigation — replaced by bottom bar */
   #side-nav   { display: none !important; }

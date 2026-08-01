@@ -85,7 +85,7 @@ export default function RightDock({ activeDockItem, onDockItemClick, isDark = tr
 
       {/* Dock items aligned along arc */}
       <div className="relative flex flex-col gap-8 items-end">
-        {dockItems.map(({ id, IconComponent, label, offsetClass, pillWidth }) => {
+        {dockItems.map(({ id, label, offsetClass, pillWidth }) => {
           const isActive = activeDockItem === id;
           return (
             <div

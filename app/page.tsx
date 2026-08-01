@@ -11,7 +11,7 @@ import StatsPanel from "@/components/StatsPanel";
 import PricingPanel from "@/components/PricingPanel";
 import ChatModal from "@/components/ChatModal";
 import { type HotspotKey } from "@/components/CarVisualizer";
-import { Home, Gauge, IndianRupee, MessageSquare, FileText } from "lucide-react";
+import { Home, Gauge, IndianRupee, MessageSquare, FileText, ShieldCheck } from "lucide-react";
 
 type AppState = "main" | "thankyou";
 type NavId = "dashboard" | "home" | "pricing";
@@ -27,23 +27,26 @@ export default function NextCarPage() {
   const [homeKey, setHomeKey] = useState(0);
 
   useEffect(() => {
-    const savedNav = localStorage.getItem("nextcar_active_nav");
-    if (savedNav === "dashboard" || savedNav === "home" || savedNav === "pricing") {
-      setActiveNav(savedNav as NavId);
-    }
-    const savedDock = localStorage.getItem("nextcar_active_dock");
-    if (savedDock === "chat" || savedDock === "docs" || savedDock === "security") {
-      setActiveDockItem(savedDock);
-    }
-    const savedTheme = localStorage.getItem("nextcar_theme");
-    if (savedTheme === "light") {
-      setIsDark(false);
-      document.documentElement.classList.add("light");
-    } else {
-      setIsDark(true);
-      document.documentElement.classList.remove("light");
-    }
-    setMounted(true);
+    const initTimer = setTimeout(() => {
+      const savedNav = localStorage.getItem("nextcar_active_nav");
+      if (savedNav === "dashboard" || savedNav === "home" || savedNav === "pricing") {
+        setActiveNav(savedNav as NavId);
+      }
+      const savedDock = localStorage.getItem("nextcar_active_dock");
+      if (savedDock === "chat" || savedDock === "docs" || savedDock === "security") {
+        setActiveDockItem(savedDock);
+      }
+      const savedTheme = localStorage.getItem("nextcar_theme");
+      if (savedTheme === "light") {
+        setIsDark(false);
+        document.documentElement.classList.add("light");
+      } else {
+        setIsDark(true);
+        document.documentElement.classList.remove("light");
+      }
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(initTimer);
   }, []);
 
   const handleToggleTheme = () => {
@@ -104,13 +107,17 @@ export default function NextCarPage() {
       id="nextcar-app"
       className={`page-root ${isDark ? "" : "light"}`}
     >
+      {/* Spotlight Beam — show only on home/dashboard, not on pricing/chat/explore/delivery */}
+      {appState === "main" && !activeDockItem && (activeNav === "dashboard" || activeNav === "home") && (
+        <div className="absolute inset-0 pointer-events-none" style={{zIndex: 0}}>
+          <div className="spotlight-beam-core" />
+        </div>
+      )}
+
       {/* Background layers */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Dot Matrix Pattern Overlay */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none bg-dot-matrix" />
-
-        {/* Center Vertical Light Beam */}
-        <div className="bg-light-beam absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none" />
+        {/* Star Pattern Overlay */}
+        <div className="absolute inset-0 opacity-75 pointer-events-none bg-dot-matrix" />
 
         {/* Concentric Background Circles */}
         <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center">
@@ -129,7 +136,12 @@ export default function NextCarPage() {
 
       {appState === "main" ? (
         <>
-          <Header isDark={isDark} onToggleTheme={handleToggleTheme} />
+          <Header
+            isDark={isDark}
+            onToggleTheme={handleToggleTheme}
+            showTitle={!activeDockItem && (activeNav === "dashboard" || activeNav === "home")}
+          />
+
           <SideNav activeItem={activeDockItem ? "" : activeNav} onItemClick={handleNavClick} isDark={isDark} />
           <RightDock activeDockItem={activeDockItem} onDockItemClick={handleDockClick} isDark={isDark} />
 
@@ -204,14 +216,14 @@ export default function NextCarPage() {
         /* Thank You Screen */
         <div
           id="thankyou-screen"
-          className="absolute inset-0 flex flex-col items-center justify-center fade-in-up"
+          className="absolute inset-0 flex flex-col items-center justify-center fade-in-up pointer-events-auto z-30"
         >
           <BackButton onClick={() => setAppState("main")} />
           <Header isDark={isDark} onToggleTheme={handleToggleTheme} />
           <SideNav activeItem={activeNav} onItemClick={handleNavClick} isDark={isDark} />
           <RightDock activeDockItem={activeDockItem} onDockItemClick={handleDockClick} isDark={isDark} />
 
-          <div className="thankyou-content flex flex-col items-center justify-center text-center scale-in">
+          <div className="thankyou-content flex flex-col items-center justify-center text-center scale-in pointer-events-auto">
             <h2 className="thankyou-heading font-black uppercase">
               THANK YOU
             </h2>
@@ -222,7 +234,7 @@ export default function NextCarPage() {
             <button
               id="back-to-home-btn"
               onClick={handleHomeClick}
-              className="thankyou-back-btn mt-8 flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+              className="thankyou-back-btn mt-8 flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 pointer-events-auto cursor-pointer"
             >
               <Home size={16} strokeWidth={1.5} />
               Home
@@ -268,6 +280,7 @@ function MobileBottomNav({
     { id: "pricing",  icon: IndianRupee,   label: "Pricing",   type: "nav" as const },
     { id: "chat",     icon: MessageSquare, label: "Chat",      type: "dock" as const },
     { id: "docs",     icon: FileText,      label: "Explore",   type: "dock" as const },
+    { id: "security", icon: ShieldCheck,   label: "Delivery",  type: "dock" as const },
   ];
 
   return (

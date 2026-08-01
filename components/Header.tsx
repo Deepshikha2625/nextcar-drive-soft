@@ -9,9 +9,10 @@ interface HeaderProps {
   isDark: boolean;
   onToggleTheme: () => void;
   onBack?: () => void;
+  showTitle?: boolean; // controls visibility of "ENGINEERED FOR PASSION"
 }
 
-export default function Header({ isDark, onToggleTheme, onBack }: HeaderProps) {
+export default function Header({ isDark, onToggleTheme, onBack, showTitle = true }: HeaderProps) {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const triggerToast = (msg: string) => {
@@ -45,31 +46,16 @@ export default function Header({ isDark, onToggleTheme, onBack }: HeaderProps) {
           padding: "clamp(8px, 2vw, 16px) clamp(12px, 3vw, 28px)",
         }}
       >
-        {/* Background Arch Dome Spotlight */}
+        {/* Background Star Overlay */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          {/* Vertical spotlight beam behind center title */}
+          {/* Star dust / particles overlay using star.png */}
           <div
-            className="absolute top-0 left-1/2 -translate-x-1/2"
+            className="absolute top-2 left-1/2 -translate-x-1/2 w-full max-w-3xl h-36 opacity-95 pointer-events-none z-0"
             style={{
-              width: "300px",
-              height: "140px",
-              background:
-                "radial-gradient(ellipse at top, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 45%, transparent 75%)",
-              filter: "blur(10px)",
-            }}
-          />
-
-          {/* Star dust / particles overlay */}
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-44 opacity-35"
-            style={{
-              backgroundImage:
-                "radial-gradient(rgba(255, 255, 255, 0.75) 1px, transparent 1px)",
-              backgroundSize: "28px 28px",
-              maskImage:
-                "radial-gradient(ellipse 65% 85% at 50% 20%, black 0%, transparent 80%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse 65% 85% at 50% 20%, black 0%, transparent 80%)",
+              backgroundImage: "url('/star.png')",
+              backgroundPosition: "center top",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "contain",
             }}
           />
         </div>
@@ -100,52 +86,54 @@ export default function Header({ isDark, onToggleTheme, onBack }: HeaderProps) {
           </button>
         </div>
 
-        {/* Hero Title — Absolutely Centered matching Figma Screenshot 1 */}
-        <div className="absolute left-1/2 top-[48px] -translate-x-1/2 hidden sm:flex flex-col items-center text-center pointer-events-none z-10 w-full max-w-4xl px-4">
-          <h1
-            className="uppercase leading-none text-center"
-            style={{
-              fontFamily: "'Shrikhand', cursive",
-              fontSize: "clamp(2.0rem, 3.4vw, 3.4rem)",
-              letterSpacing: "0.02em",
-              fontWeight: 400,
-            }}
-          >
-            <span style={{ color: isDark ? "#ffffff" : "#111118", fontStyle: "italic" }}>
-              ENGINEERED FOR{" "}
-            </span>
-            <span
-              className="glow-text"
-              style={{ color: "var(--red-accent)", fontStyle: "italic" }}
+        {/* Hero Title — only on home/dashboard pages */}
+        {showTitle && (
+          <div className="absolute left-1/2 top-[62px] -translate-x-1/2 flex flex-col items-center text-center pointer-events-none z-10 w-full max-w-4xl px-4">
+            <h1
+              className="uppercase leading-none text-center"
+              style={{
+                fontFamily: "'Shrikhand', cursive",
+                fontSize: "clamp(1.4rem, 3.4vw, 3.4rem)",
+                letterSpacing: "0.02em",
+                fontWeight: 400,
+              }}
             >
-              PASSION
-            </span>
-          </h1>
-          <p
-            className="text-center mt-2.5"
-            style={{
-              color: isDark ? "rgba(255,255,255,0.65)" : "rgba(17,17,24,0.6)",
-              fontSize: "clamp(0.72rem, 0.82vw, 0.82rem)",
-              letterSpacing: "0.12em",
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 400,
-              textTransform: "none",
-            }}
-          >
-            Precision. Power. Performance
-          </p>
-          {/* Red accent bar centered under subtitle */}
-          <div
-            className="mt-2"
-            style={{
-              width: 28,
-              height: 2,
-              background: "var(--red-accent)",
-              borderRadius: 2,
-              boxShadow: "0 0 8px rgba(196,5,4,0.9), 0 0 16px rgba(196,5,4,0.4)",
-            }}
-          />
-        </div>
+              <span style={{ color: isDark ? "#ffffff" : "#111118", fontStyle: "italic" }}>
+                ENGINEERED FOR{" "}
+              </span>
+              <span
+                className="glow-text"
+                style={{ color: "var(--red-accent)", fontStyle: "italic" }}
+              >
+                PASSION
+              </span>
+            </h1>
+            <p
+              className="text-center mt-2"
+              style={{
+                color: isDark ? "rgba(255,255,255,0.65)" : "rgba(17,17,24,0.6)",
+                fontSize: "clamp(0.62rem, 0.82vw, 0.82rem)",
+                letterSpacing: "0.12em",
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 400,
+                textTransform: "none",
+              }}
+            >
+              Precision. Power. Performance
+            </p>
+            {/* Red accent bar */}
+            <div
+              className="mt-1.5"
+              style={{
+                width: 28,
+                height: 2,
+                background: "var(--red-accent)",
+                borderRadius: 2,
+                boxShadow: "0 0 8px rgba(196,5,4,0.9), 0 0 16px rgba(196,5,4,0.4)",
+              }}
+            />
+          </div>
+        )}
 
         {/* Far Right Section: Theme Toggle Pill top right + Action Buttons */}
         <div className="relative z-10 flex flex-col items-end gap-3 pointer-events-auto">
