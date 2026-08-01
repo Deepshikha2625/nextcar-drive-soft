@@ -13,32 +13,19 @@ export default function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
       onClick={onToggle}
       id="theme-toggle"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="relative flex items-center p-1 rounded-full transition-all duration-300 hover:scale-105 cursor-pointer"
-      style={{
-        background: isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.08)",
-        border: isDark ? "1px solid rgba(255, 255, 255, 0.12)" : "1px solid rgba(0, 0, 0, 0.14)",
-        backdropFilter: "blur(12px)",
-        width: "72px",
-        height: "36px",
-        boxShadow: isDark ? "0 4px 15px rgba(0, 0, 0, 0.3)" : "0 4px 15px rgba(0, 0, 0, 0.08)",
-      }}
+      className={`relative flex items-center p-1 rounded-full transition-all duration-300 hover:scale-105 cursor-pointer w-[72px] h-[36px] backdrop-blur-md ${
+        isDark
+          ? "bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.12)] shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
+          : "bg-[rgba(0,0,0,0.08)] border border-[rgba(0,0,0,0.14)] shadow-[0_4px_15px_rgba(0,0,0,0.08)]"
+      }`}
     >
       {/* Active Indicator Sliding Pill */}
       <div
-        className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out"
-        style={{
-          width: "28px",
-          left: isDark ? "38px" : "4px",
-          background: isDark
-            ? "rgba(255, 255, 255, 0.18)"
-            : "rgba(232, 33, 43, 0.3)",
-          boxShadow: isDark
-            ? "0 0 10px rgba(255, 255, 255, 0.25)"
-            : "0 0 10px rgba(232, 33, 43, 0.5)",
-          border: isDark
-            ? "1px solid rgba(255, 255, 255, 0.2)"
-            : "1px solid rgba(232, 33, 43, 0.5)",
-        }}
+        className={`absolute top-1 bottom-1 w-[28px] rounded-full transition-all duration-300 ease-out ${
+          isDark
+            ? "left-[38px] bg-[rgba(255,255,255,0.18)] shadow-[0_0_10px_rgba(255,255,255,0.25)] border border-[rgba(255,255,255,0.2)]"
+            : "left-[4px] bg-[rgba(232,33,43,0.3)] shadow-[0_0_10px_rgba(232,33,43,0.5)] border border-[rgba(232,33,43,0.5)]"
+        }`}
       />
 
       {/* Sun Icon (Light Mode option) */}
@@ -46,10 +33,9 @@ export default function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
         <Sun
           size={15}
           strokeWidth={2}
-          style={{
-            color: !isDark ? "var(--red-accent)" : "rgba(255, 255, 255, 0.4)",
-            transition: "color 0.3s",
-          }}
+          className={`transition-colors duration-300 ${
+            !isDark ? "text-[var(--red-accent)]" : "text-[rgba(255,255,255,0.4)]"
+          }`}
         />
       </div>
 
@@ -58,10 +44,9 @@ export default function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
         <Moon
           size={15}
           strokeWidth={2}
-          style={{
-            color: isDark ? "#ffffff" : "rgba(17, 17, 24, 0.4)",
-            transition: "color 0.3s",
-          }}
+          className={`transition-colors duration-300 ${
+            isDark ? "text-white" : "text-[rgba(17,17,24,0.4)]"
+          }`}
         />
       </div>
     </button>

@@ -102,64 +102,45 @@ export default function HotspotPanel({ activeHotspot, onClose, onAddToBuild }: H
   const content = panelContent[activeHotspot];
   const IconComp = content.icon;
 
+  const colorClasses: Record<string, string> = {
+    "#111": "bg-[#111]",
+    "#e8212b": "bg-[#e8212b]",
+    "#f0f0f0": "bg-[#f0f0f0]",
+    "#1a2a6c": "bg-[#1a2a6c]",
+  };
+
   return (
     <div
       id="hotspot-panel"
       data-config-loaded={configLoaded}
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 scale-in"
-      style={{ width: "clamp(280px, 90vw, 340px)" }}
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 scale-in w-[clamp(280px,90vw,340px)]"
     >
-      <div
-        className="rounded-2xl p-5 relative"
-        style={{
-          background: "rgba(10,10,15,0.92)",
-          border: "1px solid rgba(232,33,43,0.3)",
-          backdropFilter: "blur(24px)",
-          boxShadow:
-            "0 0 60px rgba(232,33,43,0.15), 0 30px 60px rgba(0,0,0,0.7)",
-        }}
-      >
+      <div className="rounded-2xl p-5 relative bg-[rgba(10,10,15,0.92)] border border-[rgba(232,33,43,0.3)] backdrop-blur-[24px] shadow-[0_0_60px_rgba(232,33,43,0.15),0_30px_60px_rgba(0,0,0,0.7)]">
         {/* Close button */}
         <button
           id="hotspot-panel-close"
           onClick={onClose}
           aria-label="Close panel"
-          className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 hover:scale-110"
-          style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.08)",
-          }}
+          className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 hover:scale-110 bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.08)] cursor-pointer"
         >
-          <X size={14} strokeWidth={2} style={{ color: "var(--text-secondary)" }} />
+          <X size={14} strokeWidth={2} className="text-[var(--text-secondary)]" />
         </button>
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{
-              background: "rgba(232,33,43,0.15)",
-              border: "1px solid rgba(232,33,43,0.3)",
-            }}
-          >
-            <IconComp size={18} strokeWidth={1.5} style={{ color: "var(--red-accent)" }} />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[rgba(232,33,43,0.15)] border border-[rgba(232,33,43,0.3)]">
+            <IconComp size={18} strokeWidth={1.5} className="text-[var(--red-accent)]" />
           </div>
           <div>
-            <h3
-              className="font-bold tracking-widest text-sm"
-              style={{ fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.2em", color: "#fff" }}
-            >
+            <h3 className="font-bold tracking-[0.2em] text-sm font-rajdhani text-white">
               {content.title}
             </h3>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.7rem" }}>{content.subtitle}</p>
+            <p className="text-[var(--text-muted)] text-[0.7rem]">{content.subtitle}</p>
           </div>
         </div>
 
         {/* Divider */}
-        <div
-          className="w-full h-px mb-4"
-          style={{ background: "linear-gradient(90deg, rgba(232,33,43,0.4), transparent)" }}
-        />
+        <div className="w-full h-px mb-4 bg-[linear-gradient(90deg,rgba(232,33,43,0.4),transparent)]" />
 
         {/* Options list */}
         <div className="flex flex-col gap-2">
@@ -170,41 +151,30 @@ export default function HotspotPanel({ activeHotspot, onClose, onAddToBuild }: H
                 key={idx}
                 id={`panel-option-${idx}`}
                 onClick={() => handleSelectOption(opt.label)}
-                className="flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group hover:scale-[1.02] cursor-pointer"
-                style={{
-                  background: isSelected
-                    ? "rgba(232,33,43,0.18)"
-                    : "rgba(255,255,255,0.04)",
-                  border: isSelected
-                    ? "1px solid rgba(232,33,43,0.6)"
-                    : "1px solid rgba(255,255,255,0.07)",
-                }}
+                className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group hover:scale-[1.02] cursor-pointer ${
+                  isSelected
+                    ? "bg-[rgba(232,33,43,0.18)] border border-[rgba(232,33,43,0.6)]"
+                    : "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)]"
+                }`}
               >
                 <div className="flex items-center gap-3">
                   {opt.color && (
                     <span
-                      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
-                      style={{
-                        background: opt.color,
-                        border: "1px solid rgba(255,255,255,0.2)",
-                      }}
+                      className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border border-[rgba(255,255,255,0.2)] ${
+                        colorClasses[opt.color] || ""
+                      }`}
                     />
                   )}
                   <span
-                    className="text-sm font-medium"
-                    style={{
-                      color: isSelected ? "#fff" : "var(--text-secondary)",
-                      transition: "color 0.2s",
-                    }}
+                    className={`text-sm font-medium transition-colors duration-200 ${
+                      isSelected ? "text-white" : "text-[var(--text-secondary)]"
+                    }`}
                   >
                     {opt.label}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span
-                    className="text-xs font-semibold"
-                    style={{ color: "var(--red-accent)", fontFamily: "'Rajdhani', sans-serif" }}
-                  >
+                  <span className="text-xs font-semibold text-[var(--red-accent)] font-rajdhani">
                     {opt.price}
                   </span>
                   {isSelected && <Check size={14} className="text-red-400" />}
@@ -218,14 +188,7 @@ export default function HotspotPanel({ activeHotspot, onClose, onAddToBuild }: H
         <button
           id="add-to-build-btn"
           onClick={onAddToBuild}
-          className="mt-4 w-full py-3 rounded-xl text-sm font-bold tracking-widest transition-all duration-300 hover:scale-[1.02] hover:shadow-lg red-glow-btn cursor-pointer"
-          style={{
-            background: "var(--red-accent)",
-            color: "#fff",
-            fontFamily: "'Rajdhani', sans-serif",
-            letterSpacing: "0.18em",
-            boxShadow: "0 0 20px rgba(232,33,43,0.4)",
-          }}
+          className="mt-4 w-full py-3 rounded-xl text-sm font-bold tracking-[0.18em] font-rajdhani text-white bg-[var(--red-accent)] shadow-[0_0_20px_rgba(232,33,43,0.4)] transition-all duration-300 hover:scale-[1.02] hover:shadow-lg red-glow-btn cursor-pointer"
         >
           ADD TO BUILD
         </button>

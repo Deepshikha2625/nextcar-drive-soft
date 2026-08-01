@@ -92,13 +92,13 @@ export default function TelemetryTimeline() {
     <div
       id="telemetry-timeline"
       data-telemetry-loaded={Boolean(telemetryData)}
-      className="absolute bottom-0 left-0 right-0 z-20 pointer-events-auto"
-      style={{ height: `${TOTAL_H}px` }}
+      className="absolute bottom-0 left-0 right-0 z-20 pointer-events-auto [height:var(--total-h)]"
+      style={{ "--total-h": `${TOTAL_H}px` } as React.CSSProperties}
     >
       {/* SVG: terrain fill + dashed red curve line */}
       <div
-        className="absolute left-0 right-0 top-0 w-full pointer-events-none overflow-hidden"
-        style={{ height: `${CURVE_H}px`, zIndex: 2 }}
+        className="absolute left-0 right-0 top-0 w-full pointer-events-none overflow-hidden z-2 [height:var(--curve-h)]"
+        style={{ "--curve-h": `${CURVE_H}px` } as React.CSSProperties}
       >
         <svg
           viewBox={`0 0 ${svgW} ${svgH}`}
@@ -107,8 +107,8 @@ export default function TelemetryTimeline() {
         >
           <defs>
             <linearGradient id="terrainFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor="#C40504" stopOpacity="0.26" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0"    />
+              <stop offset="0%" stopColor="#C40504" stopOpacity="0.26" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </linearGradient>
           </defs>
           <path d={fillPath} fill="url(#terrainFill)" />
@@ -125,13 +125,13 @@ export default function TelemetryTimeline() {
 
       {/* Lap dot markers + vertical connector lines */}
       <div
-        className="absolute left-0 right-0 top-0 w-full"
-        style={{ height: `${CURVE_H}px`, zIndex: 10 }}
+        className="absolute left-0 right-0 top-0 w-full z-10 [height:var(--curve-h)]"
+        style={{ "--curve-h": `${CURVE_H}px` } as React.CSSProperties}
       >
         {laps.map((lap) => {
-          const isActive  = activeLap === lap.id;
-          const yPct      = getYPctForX(lap.x);
-          const dotYpx    = (yPct / 100) * CURVE_H;
+          const isActive = activeLap === lap.id;
+          const yPct = getYPctForX(lap.x);
+          const dotYpx = (yPct / 100) * CURVE_H;
           const dotRadius = isActive ? (isMobile ? 10 : 14) : (isMobile ? 8 : 12);
           const connectorH = Math.max(0, CURVE_H - dotYpx - dotRadius);
 
@@ -141,54 +141,26 @@ export default function TelemetryTimeline() {
                 id={`lap-dot-${lap.id}`}
                 onClick={() => setActiveLap(lap.id)}
                 aria-label={`${lap.label} – ${lap.zone}`}
-                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer focus:outline-none"
-                style={{
-                  left:   `${lap.x}%`,
-                  top:    `${yPct}%`,
-                  zIndex: 20,
-                }}
+                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer focus:outline-none z-20 [left:var(--lap-x)] [top:var(--lap-y)]"
+                style={{ "--lap-x": `${lap.x}%`, "--lap-y": `${yPct}%` } as React.CSSProperties}
               >
                 <span
-                  className="flex items-center justify-center rounded-full transition-all duration-300"
-                  style={
+                  className={`flex items-center justify-center rounded-full transition-all duration-300 ${
                     isActive
-                      ? {
-                          width:  dotRadius * 2,
-                          height: dotRadius * 2,
-                          background: "radial-gradient(circle at 38% 32%, #FF5566 0%, #CC0010 55%, #880008 100%)",
-                          boxShadow:
-                            `0 0 0 ${isMobile ? 6 : 10}px rgba(200,0,14,0.18), ` +
-                            "0 0 24px rgba(220,30,46,0.9), " +
-                            "0 0 10px rgba(220,30,46,0.7), " +
-                            "inset 0 1px 4px rgba(255,180,180,0.3)",
-                        }
-                      : {
-                          width:           dotRadius * 2,
-                          height:          dotRadius * 2,
-                          background:      "rgba(159,159,159,0.57)",
-                          backdropFilter:  "blur(24px)",
-                          WebkitBackdropFilter: "blur(24px)",
-                          boxShadow:
-                            `0 0 0 ${isMobile ? 6 : 10.94}px rgba(255,255,255,0.10), ` +
-                            "0 2px 8px rgba(0,0,0,0.6)",
-                        }
-                  }
+                      ? (isMobile ? "w-5 h-5 shadow-[0_0_0_6px_rgba(200,0,14,0.18),0_0_24px_rgba(220,30,46,0.9),0_0_10px_rgba(220,30,46,0.7),inset_0_1px_4px_rgba(255,180,180,0.3)]" : "w-7 h-7 shadow-[0_0_0_10px_rgba(200,0,14,0.18),0_0_24px_rgba(220,30,46,0.9),0_0_10px_rgba(220,30,46,0.7),inset_0_1px_4px_rgba(255,180,180,0.3)]") +
+                        " bg-[radial-gradient(circle_at_38%_32%,#FF5566_0%,#CC0010_55%,#880008_100%)]"
+                      : (isMobile ? "w-4 h-4 shadow-[0_0_0_6px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.6)]" : "w-[24px] h-[24px] shadow-[0_0_0_10.94px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.6)]") +
+                        " bg-[rgba(159,159,159,0.57)] backdrop-blur-2xl"
+                  }`}
                 />
 
                 {/* Vertical dashed connector */}
                 <span
                   aria-hidden="true"
-                  className="absolute left-1/2 -translate-x-px"
-                  style={{
-                    top:    "100%",
-                    width:  1,
-                    height: connectorH,
-                    borderLeft: "1.5px dashed",
-                    borderLeftColor: isActive
-                      ? "rgba(220,30,46,0.55)"
-                      : "var(--text-muted)",
-                    display: "block",
-                  }}
+                  className={`absolute left-1/2 -translate-x-px top-full w-px border-l-[1.5px] border-dashed block [height:var(--connector-h)] ${
+                    isActive ? "border-l-[rgba(220,30,46,0.55)]" : "border-l-[var(--text-muted)]"
+                  }`}
+                  style={{ "--connector-h": `${connectorH}px` } as React.CSSProperties}
                 />
               </button>
             </div>
@@ -198,8 +170,8 @@ export default function TelemetryTimeline() {
 
       {/* Lap text labels (bottom strip) */}
       <div
-        className="absolute bottom-0 left-0 right-0 w-full"
-        style={{ height: `${LABEL_H}px`, zIndex: 5 }}
+        className="absolute bottom-0 left-0 right-0 w-full z-5 [height:var(--label-h)]"
+        style={{ "--label-h": `${LABEL_H}px` } as React.CSSProperties}
       >
         {laps.map((lap) => {
           const isActive = activeLap === lap.id;
@@ -209,38 +181,26 @@ export default function TelemetryTimeline() {
               id={`lap-label-${lap.id}`}
               onClick={() => setActiveLap(lap.id)}
               aria-label={`Select ${lap.label}`}
-              className="absolute -translate-x-1/2 text-center cursor-pointer focus:outline-none bg-transparent border-0 p-0"
-              style={{ left: `${lap.x}%`, top: 0 }}
+              className="absolute -translate-x-1/2 text-center cursor-pointer focus:outline-none bg-transparent border-0 p-0 top-0 [left:var(--lap-x)]"
+              style={{ "--lap-x": `${lap.x}%` } as React.CSSProperties}
             >
               <p
-                style={{
-                  fontFamily:    "Inter, -apple-system, sans-serif",
-                  color:         isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                  fontSize:      isSmall ? "0.48rem" : isMobile ? "0.54rem" : "clamp(0.52rem, 1vw, 0.67rem)",
-                  fontWeight:    isActive ? 700 : 500,
-                  letterSpacing: "0.07em",
-                  textTransform: "uppercase",
-                  whiteSpace:    "nowrap",
-                  transition:    "all 0.3s",
-                  lineHeight:    1.2,
-                  marginBottom:  1,
-                }}
+                className={`font-sans uppercase whitespace-nowrap transition-all duration-300 leading-tight mb-[1px] tracking-[0.07em] ${
+                  isActive ? "text-[var(--text-primary)] font-bold" : "text-[var(--text-secondary)] font-medium"
+                } ${
+                  isSmall ? "text-[0.48rem]" : isMobile ? "text-[0.54rem]" : "text-[clamp(0.52rem,1vw,0.67rem)]"
+                }`}
               >
                 {lap.label}
               </p>
               {/* Hide zone label on very small screens */}
               {!isSmall && (
                 <p
-                  style={{
-                    fontFamily:    "Inter, -apple-system, sans-serif",
-                    color:         isActive ? "var(--text-secondary)" : "var(--text-muted)",
-                    fontSize:      isMobile ? "0.42rem" : "clamp(0.44rem, 0.8vw, 0.58rem)",
-                    fontWeight:    400,
-                    letterSpacing: "0.02em",
-                    whiteSpace:    "nowrap",
-                    transition:    "all 0.3s",
-                    lineHeight:    1.1,
-                  }}
+                  className={`font-sans whitespace-nowrap transition-all duration-300 leading-tight font-normal tracking-[0.02em] ${
+                    isActive ? "text-[var(--text-secondary)]" : "text-[var(--text-muted)]"
+                  } ${
+                    isMobile ? "text-[0.42rem]" : "text-[clamp(0.44rem,0.8vw,0.58rem)]"
+                  }`}
                 >
                   {lap.zone}
                 </p>

@@ -109,7 +109,7 @@ export default function NextCarPage() {
     >
       {/* Spotlight Beam — show only on home/dashboard, not on pricing/chat/explore/delivery */}
       {appState === "main" && !activeDockItem && (activeNav === "dashboard" || activeNav === "home") && (
-        <div className="absolute inset-0 pointer-events-none" style={{zIndex: 0}}>
+        <div className="absolute inset-0 pointer-events-none z-0">
           <div className="spotlight-beam-core" />
         </div>
       )}
@@ -275,12 +275,12 @@ function MobileBottomNav({
   onDockClick: (id: string) => void;
 }) {
   const navItems = [
-    { id: "dashboard", icon: Gauge,         label: "Dashboard", type: "nav" as const },
-    { id: "home",      icon: Home,          label: "Home",      type: "nav" as const },
-    { id: "pricing",  icon: IndianRupee,   label: "Pricing",   type: "nav" as const },
-    { id: "chat",     icon: MessageSquare, label: "Chat",      type: "dock" as const },
-    { id: "docs",     icon: FileText,      label: "Explore",   type: "dock" as const },
-    { id: "security", icon: ShieldCheck,   label: "Delivery",  type: "dock" as const },
+    { id: "dashboard", icon: Gauge,         label: "Dashboard",        type: "nav" as const },
+    { id: "home",      icon: Home,          label: "Click for Home",   type: "nav" as const },
+    { id: "pricing",  icon: IndianRupee,   label: "Pricing",          type: "nav" as const },
+    { id: "chat",     icon: MessageSquare, label: "Chat Assistant",   type: "dock" as const },
+    { id: "docs",     icon: FileText,      label: "Explore timeline", type: "dock" as const },
+    { id: "security", icon: ShieldCheck,   label: "Security Shield",  type: "dock" as const },
   ];
 
   return (
@@ -302,9 +302,13 @@ function MobileBottomNav({
               <Icon
                 size={18}
                 strokeWidth={1.8}
-                style={{
-                  color: isActive ? "#ffffff" : isDark ? "rgba(255,255,255,0.5)" : "rgba(17,17,24,0.5)",
-                }}
+                className={
+                  isActive
+                    ? "text-white"
+                    : isDark
+                    ? "text-[rgba(255,255,255,0.5)]"
+                    : "text-[rgba(17,17,24,0.5)]"
+                }
               />
             </span>
             <span className={`mobile-nav-label ${

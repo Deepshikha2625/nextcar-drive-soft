@@ -236,14 +236,10 @@ export default function CarVisualizer({
               const clampedPct  = (clampedPx / containerW) * 100;
               return (
                 <div
-                  className="absolute bottom-0 flex flex-col items-center"
-                  style={{
-                    left: `${clampedPct}%`,
-                    transform: "translateX(-50%)",
-                    transition: "left 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.5s ease",
-                    opacity: dotsVisible ? 1 : 0,
-                    zIndex: 30,
-                  }}
+                  className={`absolute bottom-0 flex flex-col items-center -translate-x-1/2 transition-[left,opacity] duration-500 z-30 [left:var(--clamped-pct)] ${
+                    dotsVisible ? "opacity-100" : "opacity-0"
+                  }`}
+                  style={{ "--clamped-pct": `${clampedPct}%` } as React.CSSProperties}
                 >
                   <div className="timeline-tooltip-card">
                     <div className="timeline-tooltip-unskew">
@@ -257,18 +253,15 @@ export default function CarVisualizer({
           </div>
 
           {/* ── Timeline row ── */}
-          <div
-            className="timeline-row relative w-full transition-opacity duration-500"
-            style={{ opacity: dotsVisible ? 1 : 0 }}
-          >
+          <div className={`timeline-row relative w-full transition-opacity duration-500 ${dotsVisible ? "opacity-100" : "opacity-0"}`}>
 
             {/* Red dashed line connecting the 4 milestone nodes */}
             <div
-              className="timeline-dashed-line absolute top-1/2 -translate-y-1/2 pointer-events-none"
+              className="timeline-dashed-line absolute top-1/2 -translate-y-1/2 pointer-events-none [left:var(--left-pct)] [right:var(--right-pct)]"
               style={{
-                left: `${TIMELINE_STEPS[0].posPercent}%`,
-                right: `${100 - TIMELINE_STEPS[TIMELINE_STEPS.length - 1].posPercent}%`,
-              }}
+                "--left-pct": `${TIMELINE_STEPS[0].posPercent}%`,
+                "--right-pct": `${100 - TIMELINE_STEPS[TIMELINE_STEPS.length - 1].posPercent}%`,
+              } as React.CSSProperties}
             />
 
             {/* Milestone nodes */}
@@ -282,8 +275,8 @@ export default function CarVisualizer({
                   key={step.id}
                   onClick={() => handleDotClick(idx)}
                   aria-label={step.label}
-                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer flex items-center justify-center z-10"
-                  style={{ left: `${step.posPercent}%` }}
+                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer flex items-center justify-center z-10 [left:var(--pos-pct)]"
+                  style={{ "--pos-pct": `${step.posPercent}%` } as React.CSSProperties}
                 >
                   <div className="node-future" />
                 </button>
@@ -294,11 +287,8 @@ export default function CarVisualizer({
                   key={step.id}
                   onClick={() => handleDotClick(idx)}
                   aria-label={step.label}
-                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer flex items-center justify-center z-20"
-                  style={{
-                    left: `${step.posPercent}%`,
-                    transition: "left 0.5s cubic-bezier(0.4,0,0.2,1)",
-                  }}
+                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer flex items-center justify-center z-20 transition-[left] duration-500 ease-out [left:var(--pos-pct)]"
+                  style={{ "--pos-pct": `${step.posPercent}%` } as React.CSSProperties}
                 >
                   {isActive ? (
                     <div className="node-active-border">
@@ -311,10 +301,7 @@ export default function CarVisualizer({
                       </div>
                     </div>
                   ) : isVisited ? (
-                    <div
-                      className="node-visited"
-                      style={{ opacity: dotsVisible ? 1 : 0 }}
-                    />
+                    <div className={`node-visited transition-opacity duration-300 ${dotsVisible ? "opacity-100" : "opacity-0"}`} />
                   ) : (
                     <div className="node-unvisited" />
                   )}

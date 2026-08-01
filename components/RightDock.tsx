@@ -87,6 +87,7 @@ export default function RightDock({ activeDockItem, onDockItemClick, isDark = tr
       <div className="relative flex flex-col gap-8 items-end">
         {dockItems.map(({ id, label, offsetClass, pillWidth }) => {
           const isActive = activeDockItem === id;
+          const widthClass = id === "chat" ? "w-[155px]" : id === "docs" ? "w-[165px]" : "w-[160px]";
           return (
             <div
               key={id}
@@ -94,12 +95,11 @@ export default function RightDock({ activeDockItem, onDockItemClick, isDark = tr
             >
               {/* Label pill — always visible when active, hover-only when inactive */}
               <div
-                className={`dock-label-pill absolute whitespace-nowrap pointer-events-none flex items-center transition-all duration-200 ${
+                className={`dock-label-pill absolute whitespace-nowrap pointer-events-none flex items-center transition-all duration-200 ${widthClass} ${
                   isActive
                     ? `opacity-100 scale-100 dock-label-pill-active`
                     : `opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 dock-label-pill-inactive`
                 }`}
-                style={{ width: `${pillWidth}px` }}
               >
                 <svg
                   width={pillWidth}
@@ -130,7 +130,7 @@ export default function RightDock({ activeDockItem, onDockItemClick, isDark = tr
                   />
                 </svg>
 
-                <span className="dock-pill-text" style={{ color: isDark ? "#ffffff" : "#111118" }}>{label}</span>
+                <span className={`dock-pill-text ${isDark ? "text-white" : "text-[#111118]"}`}>{label}</span>
               </div>
 
               {/* Main dock button */}

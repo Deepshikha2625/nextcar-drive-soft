@@ -2,6 +2,24 @@
 
 @import "tailwindcss";
 
+@theme {
+  --font-shrikhand: 'Shrikhand', cursive;
+  --font-rajdhani: 'Rajdhani', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+.font-shrikhand {
+  font-family: 'Shrikhand', cursive;
+}
+
+.font-rajdhani {
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
+
 :root {
   --bg-primary: #050507;
   --bg-secondary: #0d0d12;
@@ -461,29 +479,45 @@ nextjs-portal,
 .ring-outer {
   width: 1280px;
   height: 1280px;
-  border: 1px solid rgba(255, 255, 255, 0.025);
-  background: transparent;
+  border-radius: 50%;
+  border: 1.32px solid transparent;
+  background:
+    linear-gradient(#0a0a0e, #0a0a0e) padding-box,
+    linear-gradient(180deg, #BBB5B5 0%, rgba(255, 255, 255, 0.7) 6%, rgba(0, 0, 0, 0) 18%) border-box;
+  box-shadow: inset 0px 26.46px 47.63px rgba(255, 255, 255, 0.06);
 }
 
 .ring-mid-outer {
   width: 940px;
   height: 940px;
-  border: 1px solid rgba(255, 255, 255, 0.025);
-  background: transparent;
+  border-radius: 50%;
+  border: 1.32px solid transparent;
+  background:
+    linear-gradient(#0a0a0e, #0a0a0e) padding-box,
+    linear-gradient(180deg, #BBB5B5 0%, rgba(255, 255, 255, 0.7) 6%, rgba(0, 0, 0, 0) 18%) border-box;
+  box-shadow: inset 0px 26.46px 47.63px rgba(255, 255, 255, 0.06);
 }
 
 .ring-mid-inner {
   width: 620px;
   height: 620px;
-  border: 1px solid rgba(255, 255, 255, 0.025);
-  background: transparent;
+  border-radius: 50%;
+  border: 1.32px solid transparent;
+  background:
+    linear-gradient(#0a0a0e, #0a0a0e) padding-box,
+    linear-gradient(180deg, #BBB5B5 0%, rgba(255, 255, 255, 0.7) 6%, rgba(0, 0, 0, 0) 18%) border-box;
+  box-shadow: inset 0px 26.46px 47.63px rgba(255, 255, 255, 0.06);
 }
 
 .ring-core {
   width: 320px;
   height: 320px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  background: transparent;
+  border-radius: 50%;
+  border: 1.32px solid transparent;
+  background:
+    linear-gradient(#0a0a0e, #0a0a0e) padding-box,
+    linear-gradient(180deg, #BBB5B5 0%, rgba(255, 255, 255, 0.7) 6%, rgba(0, 0, 0, 0) 18%) border-box;
+  box-shadow: inset 0px 26.46px 47.63px rgba(255, 255, 255, 0.06);
 }
 
 /* Light theme ring overrides */
@@ -1176,31 +1210,45 @@ nextjs-portal,
 ───────────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   /* Concentric rings — scaled for narrow viewports */
-  .ring-outer     { width: min(560px, 150vw);  height: min(560px, 150vw); }
-  .ring-mid-outer { width: min(410px, 110vw);  height: min(410px, 110vw); }
-  .ring-mid-inner { width: min(270px, 72vw);   height: min(270px, 72vw);  }
-  .ring-core      { width: min(135px, 36vw);   height: min(135px, 36vw);  }
+  .ring-outer     { width: min(560px, 130vw);  height: min(560px, 130vw); }
+  .ring-mid-outer { width: min(410px, 100vw);  height: min(410px, 100vw); }
+  .ring-mid-inner { width: min(270px, 70vw);   height: min(270px, 70vw);  }
+  .ring-core      { width: min(135px, 35vw);   height: min(135px, 35vw);  }
 
   /* Car circle */
   .car-circle-outer {
-    width:  min(210px, 54vw);
-    height: min(210px, 54vw);
+    width:  min(200px, 52vw);
+    height: min(200px, 52vw);
   }
 
-  /* Mobile hotspots — reposition around the small car circle */
+  /* Mobile hotspots — positioned within screen boundaries */
   .hotspot-size {
-    width: 100px !important;
-    height: 42px !important;
-    border-radius: 14px !important;
-    font-size: 0.55rem !important;
+    width: 86px !important;
+    height: 36px !important;
+    padding: 2px !important;
+    border-radius: 12px !important;
   }
-  .hotspot-pos-customize   { top: calc(50% - 130px); left: calc(50% - 210px); display: flex !important; }
-  .hotspot-pos-bodywork    { top: calc(50% - 130px); left: calc(50% + 110px); display: flex !important; }
-  .hotspot-pos-paintjob    { top: calc(50% + 95px);  left: calc(50% - 210px); display: flex !important; }
-  .hotspot-pos-accessories { top: calc(50% + 95px);  left: calc(50% + 110px); display: flex !important; }
+  .hotspot-label-base {
+    font-size: 0.50rem !important;
+    letter-spacing: 0.04em !important;
+    white-space: nowrap !important;
+    border-radius: 10px !important;
+  }
+  .hotspot-pos-customize   { top: calc(50% - 102px) !important; left: max(8px, calc(50% - 156px)) !important; right: auto !important; display: flex !important; }
+  .hotspot-pos-bodywork    { top: calc(50% - 102px) !important; right: max(8px, calc(50% - 156px)) !important; left: auto !important; display: flex !important; }
+  .hotspot-pos-paintjob    { top: calc(50% + 66px) !important;  left: max(8px, calc(50% - 156px)) !important; right: auto !important; display: flex !important; }
+  .hotspot-pos-accessories { top: calc(50% + 66px) !important;  right: max(8px, calc(50% - 156px)) !important; left: auto !important; display: flex !important; }
 
+
+
+  /* Spotlight beam — scaled for mobile */
+  .spotlight-beam-core {
+    width: min(540px, 100vw) !important;
+    height: 500px !important;
+  }
 
   /* Hide side/right navigation — replaced by bottom bar */
+
   #side-nav   { display: none !important; }
   #right-dock { display: none !important; }
 
@@ -1332,12 +1380,16 @@ nextjs-portal,
 
 .mobile-nav-label {
   font-family: 'Inter', sans-serif;
-  font-size: 0.55rem;
+  font-size: clamp(0.44rem, 1.7vw, 0.53rem);
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.01em;
   color: var(--text-muted);
   transition: color 0.25s;
   white-space: nowrap;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mobile-nav-label-active {
@@ -1407,15 +1459,53 @@ nextjs-portal,
 /* ─────────────────────────────────────────────────────────────────────────
    RESPONSIVE — STATS PANEL
 ───────────────────────────────────────────────────────────────────────── */
+.stats-left {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: calc(50% + 215px);
+  width: 170px;
+}
+
+.stats-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: calc(50% + 215px);
+  width: 170px;
+}
+
 @media (max-width: 900px) {
-  .stats-left  { right: calc(50% + 155px); width: 130px; }
-  .stats-right { left:  calc(50% + 155px); width: 130px; }
+  .stats-left {
+    right: calc(50% + 145px);
+    width: 130px;
+  }
+  .stats-right {
+    left: calc(50% + 145px);
+    width: 130px;
+  }
 }
 
 @media (max-width: 640px) {
-  /* Hide stats on mobile — car takes full width */
-  .stats-left,
-  .stats-right { display: none !important; }
+  .stats-left {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: clamp(8px, 3vw, 16px) !important;
+    right: auto !important;
+    width: clamp(72px, 22vw, 95px) !important;
+    display: flex !important;
+  }
+
+  .stats-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: clamp(8px, 3vw, 16px) !important;
+    left: auto !important;
+    width: clamp(72px, 22vw, 95px) !important;
+    display: flex !important;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

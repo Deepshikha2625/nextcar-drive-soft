@@ -72,29 +72,22 @@ function PricingCard({
 
   return (
     <div
-      className={`pricing-card flex flex-col flex-1 max-w-[310px] rounded-2xl p-5 scale-in transition-all duration-300 backdrop-blur-2xl`}
-      style={{
-        background: plan.popular
-          ? "var(--pricing-card-popular-bg, rgba(16, 14, 16, 0.95))"
-          : "var(--pricing-card-bg, rgba(18, 18, 22, 0.90))",
-        border: plan.popular
-          ? "1.5px solid #C40504"
-          : "1px solid var(--border-glass)",
-        boxShadow: plan.popular
-          ? "0 0 35px rgba(196,5,4,0.25), 0 12px 35px rgba(0,0,0,0.7)"
-          : "0 8px 25px rgba(0,0,0,0.2)",
-      }}
+      className={`pricing-card flex flex-col flex-1 max-w-[310px] rounded-2xl p-5 scale-in transition-all duration-300 backdrop-blur-2xl ${
+        plan.popular
+          ? "bg-[var(--pricing-card-popular-bg,rgba(16,14,16,0.95))] border-[1.5px] border-[#C40504] shadow-[0_0_35px_rgba(196,5,4,0.25),0_12px_35px_rgba(0,0,0,0.7)]"
+          : "bg-[var(--pricing-card-bg,rgba(18,18,22,0.90))] border border-[var(--border-glass)] shadow-[0_8px_25px_rgba(0,0,0,0.2)]"
+      }`}
     >
       {/* 1. Header & Price Block */}
       <div className="flex flex-col mb-3 card-plan-header">
-        <h3 className="font-sans text-sm font-semibold mb-1.5 tracking-tight" style={{ color: "var(--text-primary)" }}>
+        <h3 className="font-sans text-sm font-semibold mb-1.5 tracking-tight text-[var(--text-primary)]">
           {plan.name}
         </h3>
         <div className="flex items-baseline gap-1.5">
-          <span className="font-sans text-2xl font-bold leading-none" style={{ color: "var(--text-primary)" }}>
+          <span className="font-sans text-2xl font-bold leading-none text-[var(--text-primary)]">
             {plan.price}
           </span>
-          <span className="font-sans text-[14px] font-normal leading-none" style={{ color: "var(--text-secondary)" }}>
+          <span className="font-sans text-[14px] font-normal leading-none text-[var(--text-secondary)]">
             {plan.suffix}
           </span>
         </div>
@@ -104,17 +97,11 @@ function PricingCard({
       <div className="w-full mb-5 cta-btn-block ">
         <button
           id={`pricing-cta-${plan.id}`}
-          className={`w-full mb-5 h-9 flex items-center justify-center rounded-full text-[0.75rem] font-semibold font-sans tracking-wide text-white transition-all duration-300 hover:scale-[1.02] cursor-pointer ${
+          className={`w-full mb-5 h-9 flex items-center justify-center rounded-full text-[0.75rem] font-semibold font-sans tracking-wide transition-all duration-300 hover:scale-[1.02] cursor-pointer ${
             isFilled
-              ? "bg-[#C40504] border-0 shadow-[0_0_18px_rgba(196,5,4,0.5),0_4px_12px_rgba(0,0,0,0.4)]"
-              : ""
+              ? "bg-[#C40504] border-0 text-white shadow-[0_0_18px_rgba(196,5,4,0.5),0_4px_12px_rgba(0,0,0,0.4)]"
+              : "bg-[var(--bg-card)] border border-[var(--border-glass)] shadow-[0_2px_6px_rgba(0,0,0,0.2)] text-[var(--text-secondary)]"
           }`}
-          style={isFilled ? {} : {
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-glass)",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-            color: "var(--text-secondary)",
-          }}
         >
           {plan.ctaLabel}
         </button>
@@ -128,7 +115,7 @@ function PricingCard({
             <span className="w-4 h-4 rounded-full bg-[#C40504] shadow-[0_0_6px_rgba(196,5,4,0.4)] flex items-center justify-center shrink-0">
               <Check size={9} strokeWidth={3} className="text-white" />
             </span>
-            <span className="font-sans text-[14px] font-normal tracking-normal leading-tight" style={{ color: "var(--text-secondary)" }}>
+            <span className="font-sans text-[14px] font-normal tracking-normal leading-tight text-[var(--text-secondary)]">
               {feature}
             </span>
           </div>
